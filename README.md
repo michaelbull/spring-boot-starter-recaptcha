@@ -2,7 +2,7 @@
 
 Spring Boot starter for Google's [reCAPTCHA v3][recaptcha-v3]
 
-[![Release](https://api.bintray.com/packages/michaelbull/maven/spring-boot-starter-recaptcha/images/download.svg)](https://bintray.com/michaelbull/maven/spring-boot-starter-recaptcha/_latestVersion) [![Build Status](https://travis-ci.org/michaelbull/spring-boot-starter-recaptcha.svg?branch=master)](https://travis-ci.org/michaelbull/kotlin-retry) [![License](https://img.shields.io/github/license/michaelbull/spring-boot-starter-recaptcha.svg)](https://github.com/michaelbull/spring-boot-starter-recaptcha/blob/master/LICENSE)
+[![Release](https://api.bintray.com/packages/michaelbull/maven/spring-boot-starter-recaptcha/images/download.svg)](https://bintray.com/michaelbull/maven/spring-boot-starter-recaptcha/_latestVersion) [![Build Status](https://travis-ci.org/michaelbull/spring-boot-starter-recaptcha.svg?branch=master)](https://travis-ci.org/michaelbull/spring-boot-starter-recaptcha) [![License](https://img.shields.io/github/license/michaelbull/spring-boot-starter-recaptcha.svg)](https://github.com/michaelbull/spring-boot-starter-recaptcha/blob/master/LICENSE)
 
 ## Installation
 
