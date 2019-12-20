@@ -15,12 +15,12 @@ fun BintrayExtension.pkg(configure: BintrayExtension.PackageConfig.() -> Unit) {
 plugins {
     `java-library`
     `maven-publish`
-    kotlin("jvm") version "1.3.50"
+    kotlin("jvm") version "1.3.61"
     id("com.github.ben-manes.versions") version "0.27.0"
     id("com.jfrog.bintray") version "1.8.4"
     id("net.researchgate.release") version "2.8.1"
     id("org.jetbrains.dokka") version "0.10.0"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.3.50"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.3.61"
 }
 
 repositories {
@@ -33,8 +33,8 @@ dependencies {
     api("com.michael-bull.kotlin-result:kotlin-result:1.1.3")
     implementation(kotlin("stdlib"))
     implementation("javax.inject:javax.inject:1")
-    implementation("org.springframework.boot:spring-boot-starter-web:2.2.0.RELEASE")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:2.2.0.RELEASE")
+    implementation("org.springframework.boot:spring-boot-starter-web:2.2.2.RELEASE")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.2.2.RELEASE")
 }
 
 tasks.withType<DependencyUpdatesTask> {
