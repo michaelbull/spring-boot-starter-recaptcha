@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.michael-bull.spring-boot-starter-recaptcha:spring-boot-starter-recaptcha:1.0.0'
+    compile 'com.michael-bull.spring-boot-starter-recaptcha:spring-boot-starter-recaptcha:1.0.1'
 }
 ```
 
