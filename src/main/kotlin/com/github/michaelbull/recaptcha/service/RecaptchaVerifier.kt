@@ -14,20 +14,20 @@ import com.github.michaelbull.result.mapError
 import com.github.michaelbull.result.onSuccess
 import com.github.michaelbull.result.runCatching
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForEntity
 import org.springframework.web.util.UriComponents
 import org.springframework.web.util.UriComponentsBuilder
-import javax.inject.Inject
-import javax.inject.Named
 
 @Service
-class RecaptchaVerifier @Inject constructor(
+class RecaptchaVerifier @Autowired constructor(
     private val rest: RestTemplate,
-    @Named("recaptchaUrl") private val recaptchaUrl: String,
-    @Named("recaptchaSecretKey") private val recaptchaSecretKey: String
+    @Qualifier("recaptchaUrl") private val recaptchaUrl: String,
+    @Qualifier("recaptchaSecretKey") private val recaptchaSecretKey: String
 ) {
 
     fun verify(ip: String, action: String?, responseToken: String?): SiteVerifyResult {

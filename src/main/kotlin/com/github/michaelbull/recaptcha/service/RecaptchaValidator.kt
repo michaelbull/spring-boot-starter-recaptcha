@@ -3,13 +3,13 @@ package com.github.michaelbull.recaptcha.service
 import com.github.michaelbull.recaptcha.model.SiteVerifyError
 import com.github.michaelbull.recaptcha.model.SiteVerifyResult
 import com.github.michaelbull.result.onFailure
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.validation.Errors
-import javax.inject.Inject
 import javax.servlet.http.HttpServletRequest
 
 @Service
-class RecaptchaValidator @Inject constructor(
+class RecaptchaValidator @Autowired constructor(
     private val recaptchaVerifier: RecaptchaVerifier
 ) {
 

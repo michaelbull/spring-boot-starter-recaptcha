@@ -1,6 +1,7 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
+import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -21,20 +22,36 @@ plugins {
     id("net.researchgate.release") version "2.8.1"
     id("org.jetbrains.dokka") version "0.10.0"
     id("org.jetbrains.kotlin.plugin.spring") version "1.3.61"
+
+    id("org.springframework.boot") version "2.2.2.RELEASE" apply false
+}
+
+apply(plugin = "io.spring.dependency-management")
+
+the<DependencyManagementExtension>().apply {
+    imports {
+        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    }
 }
 
 repositories {
     mavenCentral()
-    jcenter()
     maven(url = "https://dl.bintray.com/michaelbull/maven")
 }
 
 dependencies {
     api("com.michael-bull.kotlin-result:kotlin-result:1.1.3")
+
+    compileOnly("jakarta.validation:jakarta.validation-api")
+    compileOnly("jakarta.servlet:jakarta.servlet-api")
+
     implementation(kotlin("stdlib"))
-    implementation("javax.inject:javax.inject:1")
-    implementation("org.springframework.boot:spring-boot-starter-web:2.2.2.RELEASE")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:2.2.2.RELEASE")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("org.springframework:spring-web")
+    implementation("org.springframework.boot:spring-boot-autoconfigure")
+    implementation("org.slf4j:slf4j-api")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<DependencyUpdatesTask> {
