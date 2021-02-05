@@ -3,11 +3,19 @@ import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-description = "Spring Boot reCAPTCHA v3 Starter."
+val ossrhUsername: String? by project
+val ossrhPassword: String? by project
+
+val signingKeyId: String? by project // must be the last 8 digits of the key
+val signingKey: String? by project
+val signingPassword: String? by project
+
+description = "Spring Boot starter for Google's reCAPTCHA v3."
 
 plugins {
     `java-library`
     `maven-publish`
+    signing
     kotlin("jvm") version "1.4.30"
     id("com.github.ben-manes.versions") version "0.36.0"
     id("org.jetbrains.dokka") version "1.4.20"
@@ -45,7 +53,7 @@ dependencies {
 
 tasks.withType<DependencyUpdatesTask> {
     rejectVersionIf {
-        listOf("alpha", "beta", "rc", "cr", "m", "eap", "pr").any {
+        listOf("alpha", "beta", "rc", "cr", "m", "eap", "pr", "dev").any {
             candidate.version.contains(it, ignoreCase = true)
         }
     }
@@ -80,6 +88,21 @@ val sourcesJar by tasks.registering(Jar::class) {
 }
 
 publishing {
+    repositories {
+        maven {
+            if (project.version.toString().endsWith("SNAPSHOT")) {
+                setUrl("https://oss.sonatype.org/content/repositories/snapshots")
+            } else {
+                setUrl("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+            }
+
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+
     publications {
         register("mavenJava", MavenPublication::class) {
             from(components["java"])
@@ -124,4 +147,9 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    sign(publishing.publications)
 }
