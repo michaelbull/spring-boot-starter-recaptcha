@@ -34,6 +34,7 @@ the<DependencyManagementExtension>().apply {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
