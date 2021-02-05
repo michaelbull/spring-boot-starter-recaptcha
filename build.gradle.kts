@@ -16,14 +16,14 @@ fun BintrayExtension.pkg(configure: BintrayExtension.PackageConfig.() -> Unit) {
 plugins {
     `java-library`
     `maven-publish`
-    kotlin("jvm") version "1.3.61"
-    id("com.github.ben-manes.versions") version "0.27.0"
-    id("com.jfrog.bintray") version "1.8.4"
+    kotlin("jvm") version "1.4.30"
+    id("com.github.ben-manes.versions") version "0.36.0"
+    id("com.jfrog.bintray") version "1.8.5"
     id("net.researchgate.release") version "2.8.1"
-    id("org.jetbrains.dokka") version "0.10.0"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.3.61"
+    id("org.jetbrains.dokka") version "1.4.20"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.4.30"
 
-    id("org.springframework.boot") version "2.2.2.RELEASE" apply false
+    id("org.springframework.boot") version "2.4.2" apply false
 }
 
 apply(plugin = "io.spring.dependency-management")
@@ -40,7 +40,7 @@ repositories {
 }
 
 dependencies {
-    api("com.michael-bull.kotlin-result:kotlin-result:1.1.3")
+    api("com.michael-bull.kotlin-result:kotlin-result:1.1.10")
 
     compileOnly("jakarta.validation:jakarta.validation-api")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
@@ -74,24 +74,20 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-val dokka by tasks.existing(DokkaTask::class) {
-    outputFormat = "javadoc"
-    outputDirectory = "$buildDir/docs/javadoc"
-}
+val dokkaJavadoc by tasks.existing(DokkaTask::class)
 
 val javadocJar by tasks.registering(Jar::class) {
     group = LifecycleBasePlugin.BUILD_GROUP
     description = "Assembles a jar archive containing the Javadoc API documentation."
     archiveClassifier.set("javadoc")
-    dependsOn(dokka)
-    from(dokka.get().outputDirectory)
+    from(dokkaJavadoc)
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
     group = LifecycleBasePlugin.BUILD_GROUP
     description = "Assembles a jar archive containing the main classes with sources."
     archiveClassifier.set("sources")
-    from(project.the<SourceSetContainer>().getByName("main").allSource)
+    from(sourceSets.main.get().allSource)
 }
 
 publishing {
