@@ -3,6 +3,8 @@ import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+description = "Spring Boot reCAPTCHA v3 Starter."
+
 plugins {
     `java-library`
     `maven-publish`
@@ -83,6 +85,43 @@ publishing {
             from(components["java"])
             artifact(javadocJar.get())
             artifact(sourcesJar.get())
+
+            pom {
+                name.set(project.name)
+                description.set(project.description)
+                url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha")
+                inceptionYear.set("2019")
+
+                licenses {
+                    license {
+                        name.set("ISC License")
+                        url.set("https://opensource.org/licenses/isc-license.txt")
+                    }
+                }
+
+                developers {
+                    developer {
+                        name.set("Michael Bull")
+                        url.set("https://www.michael-bull.com")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:https://github.com/michaelbull/spring-boot-starter-recaptcha")
+                    developerConnection.set("scm:git:git@github.com:michaelbull/spring-boot-starter-recaptcha.git")
+                    url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha")
+                }
+
+                issueManagement {
+                    system.set("GitHub")
+                    url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha/issues")
+                }
+
+                ciManagement {
+                    system.set("GitHub")
+                    url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha/actions?query=workflow%3Aci")
+                }
+            }
         }
     }
 }
