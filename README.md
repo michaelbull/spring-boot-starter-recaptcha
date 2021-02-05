@@ -1,18 +1,18 @@
 # Spring Boot reCAPTCHA v3 Starter
 
-[![Release](https://api.bintray.com/packages/michaelbull/maven/spring-boot-starter-recaptcha/images/download.svg)](https://bintray.com/michaelbull/maven/spring-boot-starter-recaptcha/_latestVersion) [![CI Status](https://github.com/michaelbull/spring-boot-starter-recaptcha/workflows/ci/badge.svg)](https://github.com/michaelbull/spring-boot-starter-recaptcha/actions?query=workflow%3Aci) [![License](https://img.shields.io/github/license/michaelbull/spring-boot-starter-recaptcha.svg)](https://github.com/michaelbull/spring-boot-starter-recaptcha/blob/master/LICENSE)
+[![Maven Central](https://img.shields.io/maven-central/v/com.michael-bull.spring-boot-starter-recaptcha/spring-boot-starter-recaptcha.svg)](https://search.maven.org/search?q=g:com.michael-bull.spring-boot-starter-recaptcha) [![CI Status](https://github.com/michaelbull/spring-boot-starter-recaptcha/workflows/ci/badge.svg)](https://github.com/michaelbull/spring-boot-starter-recaptcha/actions?query=workflow%3Aci) [![License](https://img.shields.io/github/license/michaelbull/spring-boot-starter-recaptcha.svg)](https://github.com/michaelbull/spring-boot-starter-recaptcha/blob/master/LICENSE)
 
-Spring Boot starter for Google's [reCAPTCHA v3][recaptcha-v3]
+Spring Boot starter for Google's [reCAPTCHA v3][recaptcha-v3].
 
 ## Installation
 
 ```groovy
 repositories {
-    maven { url = 'https://dl.bintray.com/michaelbull/maven' }
+    mavenCentral()
 }
 
 dependencies {
-    compile 'com.michael-bull.spring-boot-starter-recaptcha:spring-boot-starter-recaptcha:1.0.1'
+    implementation("com.michael-bull.spring-boot-starter-recaptcha:spring-boot-starter-recaptcha:1.0.2-SNAPSHOT")
 }
 ```
 
