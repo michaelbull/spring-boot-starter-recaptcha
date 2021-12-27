@@ -16,12 +16,12 @@ plugins {
     `java-library`
     `maven-publish`
     signing
-    kotlin("jvm") version "1.4.30"
-    id("com.github.ben-manes.versions") version "0.36.0"
-    id("org.jetbrains.dokka") version "1.4.20"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.4.30"
+    kotlin("jvm") version "1.6.10"
+    id("com.github.ben-manes.versions") version "0.39.0"
+    id("org.jetbrains.dokka") version "1.6.10"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.6.10"
 
-    id("org.springframework.boot") version "2.4.2" apply false
+    id("org.springframework.boot") version "2.6.2" apply false
 }
 
 apply(plugin = "io.spring.dependency-management")
@@ -34,11 +34,10 @@ the<DependencyManagementExtension>().apply {
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
-    api("com.michael-bull.kotlin-result:kotlin-result:1.1.10")
+    api("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
 
     compileOnly("jakarta.validation:jakarta.validation-api")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
@@ -63,7 +62,6 @@ tasks.withType<DependencyUpdatesTask> {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs = listOf("-Xuse-experimental=kotlin.contracts.ExperimentalContracts")
     }
 }
 
