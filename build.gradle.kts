@@ -17,6 +17,7 @@ plugins {
     `maven-publish`
     signing
     kotlin("jvm") version "1.6.10"
+    kotlin("kapt") version "1.6.10"
     id("com.github.ben-manes.versions") version "0.39.0"
     id("org.jetbrains.dokka") version "1.6.10"
     id("org.jetbrains.kotlin.plugin.spring") version "1.6.10"
@@ -37,6 +38,8 @@ repositories {
 }
 
 dependencies {
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+
     api("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
 
     compileOnly("jakarta.validation:jakarta.validation-api")

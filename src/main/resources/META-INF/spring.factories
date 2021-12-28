@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.michaelbull.recaptcha.configuration.RecaptchaConfiguration
+  com.github.michaelbull.recaptcha.configuration.RecaptchaAutoConfiguration
