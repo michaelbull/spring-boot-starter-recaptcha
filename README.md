@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.michael-bull.spring-boot-starter-recaptcha:spring-boot-starter-recaptcha:1.0.2")
+    implementation("com.michael-bull.spring-boot-starter-recaptcha:spring-boot-starter-recaptcha:1.0.3")
 }
 ```
 
