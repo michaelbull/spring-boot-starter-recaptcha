@@ -7,9 +7,8 @@ import com.github.michaelbull.recaptcha.model.SiteVerifyResponse
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.getError
 import com.github.michaelbull.result.unwrap
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.instanceOf
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.web.client.MockRestServiceServer
@@ -71,7 +70,7 @@ class RecaptchaVerifierTest {
 
         val result = verifier.verify("myIp", "myAction", "myInput")
         val error = result.getError() as SiteVerifyError.Request
-        assertThat(error.throwable, instanceOf(RestClientException::class.java))
+        assertInstanceOf(RestClientException::class.java, error.throwable)
     }
 
     private fun withVerifyResponse(response: SiteVerifyResponse): ResponseCreator {
