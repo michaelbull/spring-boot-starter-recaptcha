@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder
     "error-codes"
 )
 data class SiteVerifyResponse(
+
     @get:JsonProperty("success")
     val success: Boolean? = null,
 

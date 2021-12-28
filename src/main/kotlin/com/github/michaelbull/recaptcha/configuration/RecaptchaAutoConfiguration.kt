@@ -23,16 +23,6 @@ class RecaptchaAutoConfiguration @Autowired constructor(
     }
 
     @Bean
-    fun recaptchaActionParameter(): String {
-        return properties.parameters.action
-    }
-
-    @Bean
-    fun recaptchaResponseTokenParameter(): String {
-        return properties.parameters.responseToken
-    }
-
-    @Bean
     fun recaptchaSiteKey(): String {
         return properties.keys.site
     }

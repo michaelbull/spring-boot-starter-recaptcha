@@ -19,22 +19,8 @@ data class RecaptchaProperties(
      */
     @NotBlank val url: String = "https://www.google.com/recaptcha/api/siteverify",
 
-    @Valid val parameters: Parameters = Parameters(),
     @Valid val keys: Keys
 ) {
-
-    data class Parameters(
-
-        /**
-         * The name of the hidden input field which contains the current action.
-         */
-        @NotBlank val action: String = "recaptchaAction",
-
-        /**
-         * The name of the hidden input field that is to be populated with the response token.
-         */
-        @NotBlank val responseToken: String = "recaptchaResponseToken"
-    )
 
     data class Keys(
 

@@ -5,6 +5,7 @@ import com.github.michaelbull.recaptcha.configuration.RecaptchaProperties
 import com.github.michaelbull.recaptcha.model.SiteVerifyError
 import com.github.michaelbull.recaptcha.model.SiteVerifyResponse
 import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.getError
 import com.github.michaelbull.result.unwrap
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.instanceOf
@@ -23,10 +24,6 @@ class RecaptchaVerifierTest {
 
     private val properties = RecaptchaProperties(
         url = "http://example.com",
-        parameters = RecaptchaProperties.Parameters(
-            action = "actionParam",
-            responseToken = "responseParam"
-        ),
         keys = RecaptchaProperties.Keys(
             site = "exampleSite",
             secret = "exampleSecret"
@@ -35,7 +32,7 @@ class RecaptchaVerifierTest {
 
     private val rest = RestTemplate()
     private val server = MockRestServiceServer.createServer(rest)
-    private val testee = RecaptchaVerifier(rest, properties.url, properties.keys.secret)
+    private val verifier = RecaptchaVerifier(rest, properties.url, properties.keys.secret)
     private val objectMapper = ObjectMapper()
     private val request = requestTo("http://example.com?secret=exampleSecret&response=myInput&remoteip=myIp")
 
@@ -49,7 +46,7 @@ class RecaptchaVerifierTest {
 
         server.expect(request).andRespond(withVerifyResponse(response))
 
-        val result = testee.verify("myIp", "myAction", "myInput")
+        val result = verifier.verify("myIp", "myAction", "myInput")
         assertEquals(response, result.unwrap().response)
     }
 
@@ -64,7 +61,7 @@ class RecaptchaVerifierTest {
 
         server.expect(request).andRespond(withVerifyResponse(response))
 
-        val result = testee.verify("myIp", "myAction", "myInput")
+        val result = verifier.verify("myIp", "myAction", "myInput")
         assertEquals(Err(SiteVerifyError.Response(errorCodes)), result)
     }
 
@@ -72,8 +69,8 @@ class RecaptchaVerifierTest {
     fun malformedResponse() {
         server.expect(request).andRespond(withJson("malformed json"))
 
-        val result = testee.verify("myIp", "myAction", "myInput")
-        val error = (result as Err).error as SiteVerifyError.Request
+        val result = verifier.verify("myIp", "myAction", "myInput")
+        val error = result.getError() as SiteVerifyError.Request
         assertThat(error.throwable, instanceOf(RestClientException::class.java))
     }
 

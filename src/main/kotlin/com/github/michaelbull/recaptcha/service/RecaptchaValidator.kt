@@ -20,9 +20,9 @@ class RecaptchaValidator @Autowired constructor(
         responseToken: String?,
         errors: Errors
     ): SiteVerifyResult {
-        return recaptchaVerifier.verify(request.ipAddress, action, responseToken).onFailure { error ->
-            errors.rejectValue(field, error.toErrorCode())
-        }
+        return recaptchaVerifier
+            .verify(request.ipAddress, action, responseToken)
+            .onFailure { error -> errors.rejectValue(field, error.toErrorCode()) }
     }
 
     private val HttpServletRequest.ipAddress: String
