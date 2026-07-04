@@ -1,70 +1,57 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
-import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinJvm
+import com.vanniktech.maven.publish.SourcesJar
 
-val ossrhUsername: String? by project
-val ossrhPassword: String? by project
-
-val signingKeyId: String? by project // must be the last 8 digits of the key
-val signingKey: String? by project
-val signingPassword: String? by project
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.versions)
+    alias(libs.plugins.maven.publish)
+}
 
 description = "Spring Boot starter for Google's reCAPTCHA v3."
 
-plugins {
-    `java-library`
-    `maven-publish`
-    signing
-    kotlin("jvm") version "1.6.10"
-    kotlin("kapt") version "1.6.10"
-    id("com.github.ben-manes.versions") version "0.39.0"
-    id("org.jetbrains.dokka") version "1.6.10"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.6.10"
+kotlin {
+    jvmToolchain(17)
 
-    id("org.springframework.boot") version "2.6.2" apply false
-}
-
-apply(plugin = "io.spring.dependency-management")
-
-the<DependencyManagementExtension>().apply {
-    imports {
-        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    compilerOptions {
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
+        freeCompilerArgs.add("-Xreturn-value-checker=full")
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    kapt("org.springframework.boot:spring-boot-configuration-processor")
+    api(libs.kotlin.result)
 
-    api("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
+    compileOnly(platform(libs.spring.boot.dependencies))
+    compileOnly(libs.jakarta.validation.api)
+    compileOnly(libs.jakarta.servlet.api)
 
-    compileOnly("jakarta.validation:jakarta.validation-api")
-    compileOnly("jakarta.servlet:jakarta.servlet-api")
+    implementation(platform(libs.spring.boot.dependencies))
+    implementation(libs.jackson.annotations)
+    implementation(libs.spring.web)
+    implementation(libs.spring.boot.autoconfigure)
+    implementation(libs.slf4j.api)
 
-    implementation(kotlin("stdlib"))
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("org.springframework:spring-web")
-    implementation("org.springframework.boot:spring-boot-autoconfigure")
-    implementation("org.slf4j:slf4j-api")
+    kapt(platform(libs.spring.boot.dependencies))
+    kapt(libs.spring.boot.configuration.processor)
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation(platform(libs.spring.boot.dependencies))
+    testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.jackson.databind)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 tasks.withType<DependencyUpdatesTask> {
+    gradleReleaseChannel = GradleReleaseChannel.CURRENT.id
+
     rejectVersionIf {
         listOf("alpha", "beta", "rc", "cr", "m", "eap", "pr", "dev").any {
             candidate.version.contains(it, ignoreCase = true)
         }
-    }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 }
 
@@ -73,85 +60,61 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-val dokkaJavadoc by tasks.existing(DokkaTask::class)
-
-val javadocJar by tasks.registering(Jar::class) {
-    group = LifecycleBasePlugin.BUILD_GROUP
-    description = "Assembles a jar archive containing the Javadoc API documentation."
-    archiveClassifier.set("javadoc")
-    from(dokkaJavadoc)
-}
-
-val sourcesJar by tasks.registering(Jar::class) {
-    group = LifecycleBasePlugin.BUILD_GROUP
-    description = "Assembles a jar archive containing the main classes with sources."
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
-
-publishing {
-    repositories {
-        maven {
-            if (project.version.toString().endsWith("SNAPSHOT")) {
-                setUrl("https://oss.sonatype.org/content/repositories/snapshots")
-            } else {
-                setUrl("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-            }
-
-            credentials {
-                username = ossrhUsername
-                password = ossrhPassword
-            }
-        }
+tasks.withType<Jar> {
+    manifest {
+        attributes(mapOf("SPDX-License-Identifier" to "ISC"))
     }
 
-    publications {
-        register("mavenJava", MavenPublication::class) {
-            from(components["java"])
-            artifact(javadocJar.get())
-            artifact(sourcesJar.get())
-
-            pom {
-                name.set(project.name)
-                description.set(project.description)
-                url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha")
-                inceptionYear.set("2019")
-
-                licenses {
-                    license {
-                        name.set("ISC License")
-                        url.set("https://opensource.org/licenses/isc-license.txt")
-                    }
-                }
-
-                developers {
-                    developer {
-                        name.set("Michael Bull")
-                        url.set("https://www.michael-bull.com")
-                    }
-                }
-
-                scm {
-                    connection.set("scm:git:https://github.com/michaelbull/spring-boot-starter-recaptcha")
-                    developerConnection.set("scm:git:git@github.com:michaelbull/spring-boot-starter-recaptcha.git")
-                    url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha")
-                }
-
-                issueManagement {
-                    system.set("GitHub")
-                    url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha/issues")
-                }
-
-                ciManagement {
-                    system.set("GitHub")
-                    url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha/actions?query=workflow%3Aci")
-                }
-            }
-        }
+    from(rootDir.resolve("LICENSE")) {
+        into("META-INF")
     }
 }
 
-signing {
-    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-    sign(publishing.publications)
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+
+    configure(
+        KotlinJvm(
+            javadocJar = JavadocJar.Empty(),
+            sourcesJar = SourcesJar.Sources(),
+        ),
+    )
+
+    pom {
+        name.set(project.name)
+        description.set(project.description)
+        url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha")
+        inceptionYear.set("2019")
+
+        licenses {
+            license {
+                name.set("ISC License")
+                url.set("https://opensource.org/licenses/isc-license.txt")
+            }
+        }
+
+        developers {
+            developer {
+                name.set("Michael Bull")
+                url.set("https://www.michael-bull.com")
+            }
+        }
+
+        scm {
+            connection.set("scm:git:https://github.com/michaelbull/spring-boot-starter-recaptcha")
+            developerConnection.set("scm:git:git@github.com:michaelbull/spring-boot-starter-recaptcha.git")
+            url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha")
+        }
+
+        issueManagement {
+            system.set("GitHub")
+            url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha/issues")
+        }
+
+        ciManagement {
+            system.set("GitHub")
+            url.set("https://github.com/michaelbull/spring-boot-starter-recaptcha/actions")
+        }
+    }
 }

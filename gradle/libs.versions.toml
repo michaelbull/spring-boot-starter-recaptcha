@@ -1,0 +1,30 @@
+[versions]
+kotlin = "2.3.21"
+kotlin-result = "2.3.1"
+spring-boot = "4.1.0"
+maven-publish-plugin = "0.36.0"
+versions-plugin = "0.54.0"
+
+[libraries]
+kotlin-result = { module = "com.michael-bull.kotlin-result:kotlin-result", version.ref = "kotlin-result" }
+
+spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
+spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-web = { module = "org.springframework:spring-web" }
+
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations" }
+jackson-databind = { module = "tools.jackson.core:jackson-databind" }
+jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api" }
+jakarta-servlet-api = { module = "jakarta.servlet:jakarta.servlet-api" }
+slf4j-api = { module = "org.slf4j:slf4j-api" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish-plugin" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "versions-plugin" }

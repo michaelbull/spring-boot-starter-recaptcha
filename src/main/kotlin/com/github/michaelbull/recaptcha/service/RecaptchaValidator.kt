@@ -2,11 +2,11 @@ package com.github.michaelbull.recaptcha.service
 
 import com.github.michaelbull.recaptcha.model.SiteVerifyError
 import com.github.michaelbull.recaptcha.model.SiteVerifyResult
-import com.github.michaelbull.result.onFailure
+import com.github.michaelbull.result.onErr
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.validation.Errors
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 @Service
 class RecaptchaValidator @Autowired constructor(
@@ -22,7 +22,7 @@ class RecaptchaValidator @Autowired constructor(
     ): SiteVerifyResult {
         return recaptchaVerifier
             .verify(request.ipAddress, action, responseToken)
-            .onFailure { error -> errors.rejectValue(field, error.toErrorCode()) }
+            .onErr { error -> errors.rejectValue(field, error.toErrorCode()) }
     }
 
     private val HttpServletRequest.ipAddress: String

@@ -20,21 +20,21 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder
 )
 data class SiteVerifyResponse(
 
-    @get:JsonProperty("success")
+    @JsonProperty("success")
     val success: Boolean? = null,
 
-    @get:JsonProperty("score")
+    @JsonProperty("score")
     val score: Double? = null,
 
-    @get:JsonProperty("action")
+    @JsonProperty("action")
     val action: String? = null,
 
-    @get:JsonProperty("challenge_ts")
+    @JsonProperty("challenge_ts")
     val challengeTimestamp: String? = null,
 
-    @get:JsonProperty("hostname")
+    @JsonProperty("hostname")
     val hostname: String? = null,
 
-    @get:JsonProperty("error-codes")
+    @JsonProperty("error-codes")
     val errorCodes: List<String>? = null
 )

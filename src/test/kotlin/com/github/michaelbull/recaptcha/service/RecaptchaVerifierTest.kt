@@ -1,6 +1,6 @@
 package com.github.michaelbull.recaptcha.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import com.github.michaelbull.recaptcha.configuration.RecaptchaProperties
 import com.github.michaelbull.recaptcha.model.SiteVerifyError
 import com.github.michaelbull.recaptcha.model.SiteVerifyResponse

@@ -11,7 +11,7 @@ import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.andThen
 import com.github.michaelbull.result.map
 import com.github.michaelbull.result.mapError
-import com.github.michaelbull.result.onSuccess
+import com.github.michaelbull.result.onOk
 import com.github.michaelbull.result.runCatching
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,7 +33,7 @@ class RecaptchaVerifier @Autowired constructor(
     fun verify(ip: String, action: String?, responseToken: String?): SiteVerifyResult {
         return createRequest(ip, action, responseToken)
             .andThen(::post)
-            .onSuccess(::log)
+            .onOk(::log)
             .andThen(::checkErrors)
             .andThen(::checkPassed)
             .andThen(::checkActions)
@@ -61,7 +61,7 @@ class RecaptchaVerifier @Autowired constructor(
     }
 
     private fun SiteVerifyRequest.toUriComponents(): UriComponents {
-        return UriComponentsBuilder.fromHttpUrl(recaptchaUrl)
+        return UriComponentsBuilder.fromUriString(recaptchaUrl)
             .queryParam("secret", recaptchaSecretKey)
             .queryParam("response", response)
             .queryParam("remoteip", remoteIp)

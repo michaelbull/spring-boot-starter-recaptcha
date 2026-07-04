@@ -1,16 +1,14 @@
 package com.github.michaelbull.recaptcha.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.validation.annotation.Validated
-import javax.validation.Valid
-import javax.validation.constraints.NotBlank
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
 
 /**
  * [@ConfigurationProperties][ConfigurationProperties] for Google reCAPTCHA v3.
  */
 @Validated
-@ConstructorBinding
 @ConfigurationProperties("recaptcha")
 data class RecaptchaProperties(
 
