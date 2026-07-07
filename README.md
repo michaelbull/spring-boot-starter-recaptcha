@@ -128,6 +128,6 @@ information and licensing terms.
 
 [//]: # (@formatter:off)
 [recaptcha-v3]: https://developers.google.com/recaptcha/docs/v3
-[recaptcha-v3-keys]: https://g.co/recaptcha/v3
+[recaptcha-v3-keys]: https://www.google.com/recaptcha/admin/create
 [github]: https://github.com/michaelbull/spring-boot-starter-recaptcha
 [//]: # (@formatter:on)
