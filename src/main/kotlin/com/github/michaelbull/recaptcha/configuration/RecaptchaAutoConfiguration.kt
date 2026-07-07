@@ -1,33 +1,27 @@
 package com.github.michaelbull.recaptcha.configuration
 
+import com.github.michaelbull.recaptcha.service.RecaptchaValidator
+import com.github.michaelbull.recaptcha.service.RecaptchaVerifier
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.web.client.RestTemplate
 
 /**
  * [Auto-configuration][EnableAutoConfiguration] for Google reCAPTCHA v3.
  */
 @Configuration
-@ComponentScan("com.github.michaelbull.recaptcha")
 @EnableConfigurationProperties(RecaptchaProperties::class)
-class RecaptchaAutoConfiguration(
-    private val properties: RecaptchaProperties
-) {
+class RecaptchaAutoConfiguration {
 
     @Bean
-    fun recaptchaUrl(): String {
-        return properties.url
+    fun recaptchaVerifier(rest: RestTemplate, properties: RecaptchaProperties): RecaptchaVerifier {
+        return RecaptchaVerifier(rest, properties)
     }
 
     @Bean
-    fun recaptchaSiteKey(): String {
-        return properties.keys.site
-    }
-
-    @Bean
-    fun recaptchaSecretKey(): String {
-        return properties.keys.secret
+    fun recaptchaValidator(verifier: RecaptchaVerifier): RecaptchaValidator {
+        return RecaptchaValidator(verifier)
     }
 }

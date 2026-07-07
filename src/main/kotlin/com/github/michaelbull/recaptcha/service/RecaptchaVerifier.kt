@@ -1,5 +1,6 @@
 package com.github.michaelbull.recaptcha.service
 
+import com.github.michaelbull.recaptcha.configuration.RecaptchaProperties
 import com.github.michaelbull.recaptcha.model.SiteVerifyError
 import com.github.michaelbull.recaptcha.model.SiteVerifyExchange
 import com.github.michaelbull.recaptcha.model.SiteVerifyRequest
@@ -14,19 +15,15 @@ import com.github.michaelbull.result.mapError
 import com.github.michaelbull.result.onOk
 import com.github.michaelbull.result.runCatching
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForEntity
 import org.springframework.web.util.UriComponents
 import org.springframework.web.util.UriComponentsBuilder
 
-@Service
 class RecaptchaVerifier(
     private val rest: RestTemplate,
-    @Qualifier("recaptchaUrl") private val recaptchaUrl: String,
-    @Qualifier("recaptchaSecretKey") private val recaptchaSecretKey: String
+    private val properties: RecaptchaProperties
 ) {
 
     fun verify(ip: String, action: String?, responseToken: String?): SiteVerifyResult {
@@ -60,8 +57,8 @@ class RecaptchaVerifier(
     }
 
     private fun SiteVerifyRequest.toUriComponents(): UriComponents {
-        return UriComponentsBuilder.fromUriString(recaptchaUrl)
-            .queryParam("secret", recaptchaSecretKey)
+        return UriComponentsBuilder.fromUriString(properties.url)
+            .queryParam("secret", properties.keys.secret)
             .queryParam("response", response)
             .queryParam("remoteip", remoteIp)
             .build()

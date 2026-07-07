@@ -31,7 +31,7 @@ class RecaptchaVerifierTest {
 
     private val rest = RestTemplate()
     private val server = MockRestServiceServer.createServer(rest)
-    private val verifier = RecaptchaVerifier(rest, properties.url, properties.keys.secret)
+    private val verifier = RecaptchaVerifier(rest, properties)
     private val objectMapper = ObjectMapper()
     private val request = requestTo("http://example.com?secret=exampleSecret&response=myInput&remoteip=myIp")
 
