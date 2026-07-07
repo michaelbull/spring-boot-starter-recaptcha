@@ -26,7 +26,6 @@ kotlin {
 dependencies {
     api(libs.kotlin.result)
 
-    compileOnly(platform(libs.spring.boot.dependencies))
     compileOnly(libs.jakarta.validation.api)
     compileOnly(libs.jakarta.servlet.api)
 
@@ -39,7 +38,6 @@ dependencies {
     kapt(platform(libs.spring.boot.dependencies))
     kapt(libs.spring.boot.configuration.processor)
 
-    testImplementation(platform(libs.spring.boot.dependencies))
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.jackson.databind)
     testRuntimeOnly(libs.junit.platform.launcher)
