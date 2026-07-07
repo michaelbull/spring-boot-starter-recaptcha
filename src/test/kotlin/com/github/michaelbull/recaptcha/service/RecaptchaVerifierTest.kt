@@ -16,8 +16,8 @@ import org.springframework.test.web.client.ResponseCreator
 import org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo
 import org.springframework.test.web.client.response.DefaultResponseCreator
 import org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess
+import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientException
-import org.springframework.web.client.RestTemplate
 
 class RecaptchaVerifierTest {
 
@@ -29,9 +29,9 @@ class RecaptchaVerifierTest {
         )
     )
 
-    private val rest = RestTemplate()
-    private val server = MockRestServiceServer.createServer(rest)
-    private val verifier = RecaptchaVerifier(rest, properties)
+    private val builder = RestClient.builder()
+    private val server = MockRestServiceServer.bindTo(builder).build()
+    private val verifier = RecaptchaVerifier(builder.build(), properties)
     private val objectMapper = ObjectMapper()
     private val request = requestTo("http://example.com?secret=exampleSecret&response=myInput&remoteip=myIp")
 

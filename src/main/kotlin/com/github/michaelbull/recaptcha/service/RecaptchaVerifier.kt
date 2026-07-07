@@ -16,13 +16,12 @@ import com.github.michaelbull.result.onOk
 import com.github.michaelbull.result.runCatching
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.client.postForEntity
+import org.springframework.web.client.RestClient
 import org.springframework.web.util.UriComponents
 import org.springframework.web.util.UriComponentsBuilder
 
 class RecaptchaVerifier(
-    private val rest: RestTemplate,
+    private val rest: RestClient,
     private val properties: RecaptchaProperties
 ) {
 
@@ -65,7 +64,10 @@ class RecaptchaVerifier(
     }
 
     private fun post(uriComponents: UriComponents): ResponseEntity<SiteVerifyResponse> {
-        return rest.postForEntity(uriComponents.toUri(), uriComponents)
+        return rest.post()
+            .uri(uriComponents.toUri())
+            .retrieve()
+            .toEntity(SiteVerifyResponse::class.java)
     }
 
     private fun post(request: SiteVerifyRequest): SiteVerifyResult {
