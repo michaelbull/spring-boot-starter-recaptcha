@@ -1,13 +1,17 @@
 package com.github.michaelbull.recaptcha.service
 
+import com.github.michaelbull.recaptcha.i18n.RecaptchaMessageSource
 import com.github.michaelbull.recaptcha.model.SiteVerifyError
 import com.github.michaelbull.recaptcha.model.SiteVerifyResult
 import com.github.michaelbull.result.onErr
+import org.springframework.context.MessageSource
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.validation.Errors
 import jakarta.servlet.http.HttpServletRequest
 
 class RecaptchaValidator(
-    private val recaptchaVerifier: RecaptchaVerifier
+    private val recaptchaVerifier: RecaptchaVerifier,
+    private val messageSource: MessageSource = RecaptchaMessageSource()
 ) {
 
     fun validate(
@@ -19,7 +23,11 @@ class RecaptchaValidator(
     ): SiteVerifyResult {
         return recaptchaVerifier
             .verify(request.ipAddress, action, responseToken)
-            .onErr { error -> errors.rejectValue(field, error.toErrorCode()) }
+            .onErr { error ->
+                val code = error.toErrorCode()
+                val defaultMessage = messageSource.getMessage(code, null, LocaleContextHolder.getLocale())
+                errors.rejectValue(field, code, defaultMessage)
+            }
     }
 
     private val HttpServletRequest.ipAddress: String

@@ -40,6 +40,7 @@ dependencies {
 
     testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.jackson.databind)
+    testImplementation(libs.jakarta.servlet.api)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
