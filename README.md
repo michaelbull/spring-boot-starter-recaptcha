@@ -6,6 +6,11 @@
 
 Spring Boot starter for Google's [reCAPTCHA v3][recaptcha-v3].
 
+## Requirements
+
+- Java 17 or later
+- Spring Boot 4
+
 ## Installation
 
 ```groovy
@@ -61,13 +66,13 @@ class RegisterFormValidator @Inject constructor(
     }
 
     override fun validate(target: Any, errors: Errors) {
-        val form = target as RecoverAccountForm
+        val form = target as RegisterForm
         val action = form.recaptchaAction
         val responseToken = form.recaptchaResponseToken
 
         recaptchaValidator
             .validate("recaptchaResponseToken", request, action, responseToken, errors)
-            .onSuccess { (_, response) -> checkResponse(response, errors) }
+            .onOk { (_, response) -> checkResponse(response, errors) }
     }
 
     private fun checkResponse(response: SiteVerifyResponse, errors: Errors) {
