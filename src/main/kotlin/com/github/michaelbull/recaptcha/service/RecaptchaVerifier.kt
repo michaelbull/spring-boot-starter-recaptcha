@@ -14,7 +14,6 @@ import com.github.michaelbull.result.mapError
 import com.github.michaelbull.result.onOk
 import com.github.michaelbull.result.runCatching
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -24,7 +23,7 @@ import org.springframework.web.util.UriComponents
 import org.springframework.web.util.UriComponentsBuilder
 
 @Service
-class RecaptchaVerifier @Autowired constructor(
+class RecaptchaVerifier(
     private val rest: RestTemplate,
     @Qualifier("recaptchaUrl") private val recaptchaUrl: String,
     @Qualifier("recaptchaSecretKey") private val recaptchaSecretKey: String

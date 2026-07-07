@@ -1,6 +1,5 @@
 package com.github.michaelbull.recaptcha.configuration
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -13,7 +12,7 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ComponentScan("com.github.michaelbull.recaptcha")
 @EnableConfigurationProperties(RecaptchaProperties::class)
-class RecaptchaAutoConfiguration @Autowired constructor(
+class RecaptchaAutoConfiguration(
     private val properties: RecaptchaProperties
 ) {
 
