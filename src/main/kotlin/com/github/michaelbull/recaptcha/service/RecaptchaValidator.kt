@@ -3,7 +3,11 @@ package com.github.michaelbull.recaptcha.service
 import com.github.michaelbull.recaptcha.i18n.RecaptchaMessageSource
 import com.github.michaelbull.recaptcha.model.SiteVerifyError
 import com.github.michaelbull.recaptcha.model.SiteVerifyResult
+import com.github.michaelbull.recaptcha.policy.RecaptchaDecision
+import com.github.michaelbull.recaptcha.policy.RecaptchaPolicy
+import com.github.michaelbull.recaptcha.policy.ScoreThresholdPolicy
 import com.github.michaelbull.result.onErr
+import com.github.michaelbull.result.onOk
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.validation.Errors
@@ -11,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest
 
 class RecaptchaValidator(
     private val recaptchaVerifier: RecaptchaVerifier,
+    private val policy: RecaptchaPolicy = ScoreThresholdPolicy(0.5),
     private val messageSource: MessageSource = RecaptchaMessageSource()
 ) {
 
@@ -23,11 +28,23 @@ class RecaptchaValidator(
     ): SiteVerifyResult {
         return recaptchaVerifier
             .verify(request.ipAddress, action, responseToken)
-            .onErr { error ->
-                val code = error.toErrorCode()
-                val defaultMessage = messageSource.getMessage(code, null, LocaleContextHolder.getLocale())
-                errors.rejectValue(field, code, defaultMessage)
+            .onErr { error -> reject(errors, field, error.toErrorCode()) }
+            .onOk { exchange ->
+                when (val decision = policy.evaluate(exchange)) {
+                    is RecaptchaDecision.Accept -> {}
+                    is RecaptchaDecision.Reject -> reject(errors, field, decision.errorCode)
+                }
             }
+    }
+
+    private fun reject(errors: Errors, field: String, code: String) {
+        val message = messageSource.getMessage(code, null, null, LocaleContextHolder.getLocale())
+
+        if (message != null) {
+            errors.rejectValue(field, code, message)
+        } else {
+            errors.rejectValue(field, code)
+        }
     }
 
     private val HttpServletRequest.ipAddress: String

@@ -1,5 +1,7 @@
 package com.github.michaelbull.recaptcha.configuration
 
+import com.github.michaelbull.recaptcha.policy.RecaptchaPolicy
+import com.github.michaelbull.recaptcha.policy.ScoreThresholdPolicy
 import com.github.michaelbull.recaptcha.service.RecaptchaValidator
 import com.github.michaelbull.recaptcha.service.RecaptchaVerifier
 import jakarta.servlet.http.HttpServletRequest
@@ -26,9 +28,15 @@ class RecaptchaAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
+    fun recaptchaPolicy(properties: RecaptchaProperties): RecaptchaPolicy {
+        return ScoreThresholdPolicy(properties.minScore)
+    }
+
+    @Bean
     @ConditionalOnClass(HttpServletRequest::class)
     @ConditionalOnMissingBean
-    fun recaptchaValidator(verifier: RecaptchaVerifier): RecaptchaValidator {
-        return RecaptchaValidator(verifier)
+    fun recaptchaValidator(verifier: RecaptchaVerifier, policy: RecaptchaPolicy): RecaptchaValidator {
+        return RecaptchaValidator(verifier, policy)
     }
 }

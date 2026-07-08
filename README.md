@@ -67,20 +67,14 @@ class RegisterFormValidator @Inject constructor(
 
     override fun validate(target: Any, errors: Errors) {
         val form = target as RegisterForm
-        val action = form.recaptchaAction
-        val responseToken = form.recaptchaResponseToken
 
-        recaptchaValidator
-            .validate("recaptchaResponseToken", request, action, responseToken, errors)
-            .onOk { (_, response) -> checkResponse(response, errors) }
-    }
-
-    private fun checkResponse(response: SiteVerifyResponse, errors: Errors) {
-        val score = response.score
-
-        if (score != null && score < 0.2) {
-            errors.rejectValue("recaptchaResponseToken", "Score too low")
-        }
+        recaptchaValidator.validate(
+            "recaptchaResponseToken",
+            request,
+            form.recaptchaAction,
+            form.recaptchaResponseToken,
+            errors
+        )
     }
 }
 ```
@@ -102,6 +96,39 @@ class RegisterController @Inject constructor(
 }
 ```
 
+## Score
+
+reCAPTCHA v3 returns a [score](https://developers.google.com/recaptcha/docs/v3#interpreting_the_score) between 0.0
+and 1.0 for each interaction. The starter rejects interactions scoring below `recaptcha.min-score` (default `0.5`):
+
+```yaml
+recaptcha:
+  min-score: 0.7
+```
+
+To decide acceptance using more than the score (for example the client IP address, hostname, or action), provide
+your own `RecaptchaPolicy` bean. The starter backs off its default `ScoreThresholdPolicy` when one is present:
+
+```kotlin
+@Component
+class IpAwareRecaptchaPolicy : RecaptchaPolicy {
+
+    override fun evaluate(exchange: SiteVerifyExchange): RecaptchaDecision {
+        val score = exchange.response.score
+        val ip = exchange.request.remoteIp
+
+        return if (score != null && score >= 0.5 && ip !in blockedIps) {
+            RecaptchaDecision.Accept
+        } else {
+            RecaptchaDecision.Reject("captcha.error.failed")
+        }
+    }
+}
+```
+
+`RecaptchaDecision.Reject` takes an error code. If it names one of the bundled `captcha.error.*` keys the default
+message is used; otherwise your application's own `messages.properties` resolves it.
+
 ## I18n
 
 The starter bundles English default messages for the `captcha.error.*` codes, so form errors render out of the box
@@ -116,6 +143,7 @@ captcha.error.responseMissing=No response from captcha service.
 captcha.error.response=Error response from captcha service.
 captcha.error.failed=Captcha failed. Please try again.
 captcha.error.actionMismatch=Captcha action mismatch.
+captcha.error.score=Captcha score too low.
 ```
 
 ## Contributing
