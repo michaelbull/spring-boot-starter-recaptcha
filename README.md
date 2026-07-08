@@ -69,11 +69,11 @@ class RegisterFormValidator @Inject constructor(
         val form = target as RegisterForm
 
         recaptchaValidator.validate(
-            "recaptchaResponseToken",
-            request,
-            form.recaptchaAction,
-            form.recaptchaResponseToken,
-            errors
+            field = "recaptchaResponseToken",
+            request = request,
+            action = form.recaptchaAction,
+            responseToken = form.recaptchaResponseToken,
+            errors = errors
         )
     }
 }
