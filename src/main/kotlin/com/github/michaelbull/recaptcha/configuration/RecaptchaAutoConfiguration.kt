@@ -2,6 +2,7 @@ package com.github.michaelbull.recaptcha.configuration
 
 import com.github.michaelbull.recaptcha.policy.RecaptchaPolicy
 import com.github.michaelbull.recaptcha.policy.ScoreThresholdPolicy
+import com.github.michaelbull.recaptcha.service.RecaptchaFormValidator
 import com.github.michaelbull.recaptcha.service.RecaptchaValidator
 import com.github.michaelbull.recaptcha.service.RecaptchaVerifier
 import jakarta.servlet.http.HttpServletRequest
@@ -38,5 +39,12 @@ class RecaptchaAutoConfiguration {
     @ConditionalOnMissingBean
     fun recaptchaValidator(verifier: RecaptchaVerifier, policy: RecaptchaPolicy): RecaptchaValidator {
         return RecaptchaValidator(verifier, policy)
+    }
+
+    @Bean
+    @ConditionalOnClass(HttpServletRequest::class)
+    @ConditionalOnMissingBean
+    fun recaptchaFormValidator(validator: RecaptchaValidator, request: HttpServletRequest): RecaptchaFormValidator {
+        return RecaptchaFormValidator(validator, request)
     }
 }

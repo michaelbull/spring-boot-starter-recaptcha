@@ -40,61 +40,40 @@ recaptcha.keys:
 #### 3. Model the form that recaptcha exists on:
 
 ```kotlin
-class RegisterForm {
+class RegisterForm : RecaptchaForm {
 
-    var recaptchaAction: String? = "register"
+    override var recaptchaAction: String? = "register"
 
-    var recaptchaResponseToken: String? = null
+    override var recaptchaResponseToken: String? = null
 
     @Email
     var email: String? = null
 }
 ```
 
-#### 4. Add a validator for your form:
+#### 4. Register the validator in your `Controller`:
 
-```kotlin
-@Component
-@RequestScope
-class RegisterFormValidator @Inject constructor(
-    private val request: HttpServletRequest,
-    private val recaptchaValidator: RecaptchaValidator
-) : Validator {
-
-    override fun supports(clazz: Class<*>): Boolean {
-        return RegisterForm::class.java.isAssignableFrom(clazz)
-    }
-
-    override fun validate(target: Any, errors: Errors) {
-        val form = target as RegisterForm
-
-        recaptchaValidator.validate(
-            field = "recaptchaResponseToken",
-            request = request,
-            action = form.recaptchaAction,
-            responseToken = form.recaptchaResponseToken,
-            errors = errors
-        )
-    }
-}
-```
-
-#### 5. Bind the validator in your `Controller`:
+The starter auto-configures a `RecaptchaFormValidator` that validates any `RecaptchaForm`. Add it in an
+`@InitBinder` method, alongside any of your own validators:
 
 ```kotlin
 @Controller
 class RegisterController @Inject constructor(
-    private val formValidator: RegisterFormValidator
+    private val recaptchaFormValidator: RecaptchaFormValidator
 ) {
 
     @InitBinder("form")
     fun initFormBinder(binder: WebDataBinder) {
-        binder.addValidators(formValidator)
+        binder.addValidators(recaptchaFormValidator)
     }
 
     /* get and post handlers... */
 }
 ```
+
+If you need behaviour `RecaptchaForm` does not cover, skip it and write your own
+[`Validator`](https://docs.spring.io/spring-framework/reference/core/validation/validator.html) that calls
+`RecaptchaValidator.validate(...)` directly, then register that instead.
 
 ## Score
 
