@@ -17,6 +17,7 @@ import com.github.michaelbull.result.runCatching
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestClient
+import org.springframework.web.client.toEntity
 import org.springframework.web.util.UriComponents
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -67,7 +68,7 @@ class RecaptchaVerifier(
         return rest.post()
             .uri(uriComponents.toUri())
             .retrieve()
-            .toEntity(SiteVerifyResponse::class.java)
+            .toEntity<SiteVerifyResponse>()
     }
 
     private fun post(request: SiteVerifyRequest): SiteVerifyResult {

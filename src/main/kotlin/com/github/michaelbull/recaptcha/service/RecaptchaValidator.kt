@@ -8,15 +8,15 @@ import com.github.michaelbull.recaptcha.policy.RecaptchaPolicy
 import com.github.michaelbull.recaptcha.policy.ScoreThresholdPolicy
 import com.github.michaelbull.result.onErr
 import com.github.michaelbull.result.onOk
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.validation.Errors
-import jakarta.servlet.http.HttpServletRequest
 
 class RecaptchaValidator(
     private val recaptchaVerifier: RecaptchaVerifier,
     private val policy: RecaptchaPolicy = ScoreThresholdPolicy(0.5),
-    private val messageSource: MessageSource = RecaptchaMessageSource()
+    private val messageSource: MessageSource = RecaptchaMessageSource(),
 ) {
 
     fun validate(
@@ -24,21 +24,26 @@ class RecaptchaValidator(
         request: HttpServletRequest,
         action: String?,
         responseToken: String?,
-        errors: Errors
+        errors: Errors,
     ): SiteVerifyResult {
         return recaptchaVerifier
             .verify(request.ipAddress, action, responseToken)
             .onErr { error -> reject(errors, field, error.toErrorCode()) }
             .onOk { exchange ->
                 when (val decision = policy.evaluate(exchange)) {
-                    is RecaptchaDecision.Accept -> {}
+                    is RecaptchaDecision.Accept -> Unit
                     is RecaptchaDecision.Reject -> reject(errors, field, decision.errorCode)
                 }
             }
     }
 
     private fun reject(errors: Errors, field: String, code: String) {
-        val message = messageSource.getMessage(code, null, null, LocaleContextHolder.getLocale())
+        val message = messageSource.getMessage(
+            /* code = */ code,
+            /* args = */ null,
+            /* defaultMessage = */ null,
+            /* locale = */ LocaleContextHolder.getLocale(),
+        )
 
         if (message != null) {
             errors.rejectValue(field, code, message)

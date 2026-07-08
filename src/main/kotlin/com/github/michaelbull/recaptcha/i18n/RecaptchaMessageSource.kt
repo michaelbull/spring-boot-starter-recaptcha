@@ -10,6 +10,6 @@ import org.springframework.context.support.ResourceBundleMessageSource
 class RecaptchaMessageSource : ResourceBundleMessageSource() {
     init {
         setBasename("com.github.michaelbull.recaptcha.messages")
-        setDefaultEncoding("UTF-8")
+        defaultCharset = Charsets.UTF_8
     }
 }
