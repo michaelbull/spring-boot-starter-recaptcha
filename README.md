@@ -99,13 +99,13 @@ class RegisterController @Inject constructor(
 ## Score
 
 reCAPTCHA v3 scores each interaction from 0.0 (likely a bot) to 1.0 (likely a good interaction). The starter rejects
-interactions scoring below `recaptcha.min-score`, which defaults to `0.5`, the starting threshold
+interactions scoring below `recaptcha.score-threshold`, which defaults to `0.5`, the starting threshold
 [Google recommends](https://developers.google.com/recaptcha/docs/v3#interpreting_the_score) ("By default, you can
 use a threshold of 0.5"):
 
 ```yaml
 recaptcha:
-  min-score: 0.7
+  score-threshold: 0.7
 ```
 
 To decide acceptance using more than the score (for example the client IP address, hostname, or action), provide

@@ -21,9 +21,9 @@ data class RecaptchaProperties(
 
     /**
      * The minimum [score](https://developers.google.com/recaptcha/docs/v3#interpreting_the_score) an interaction must
-     * meet to be accepted by the default score-threshold policy, between 0.0 and 1.0.
+     * reach to be accepted by the default score-threshold policy, between 0.0 and 1.0.
      */
-    @DecimalMin("0.0") @DecimalMax("1.0") val minScore: Double = 0.5,
+    @DecimalMin("0.0") @DecimalMax("1.0") val scoreThreshold: Double = 0.5,
 
     @Valid val keys: Keys
 ) {

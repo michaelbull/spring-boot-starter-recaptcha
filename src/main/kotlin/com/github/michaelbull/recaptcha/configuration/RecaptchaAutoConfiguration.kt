@@ -30,7 +30,7 @@ class RecaptchaAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     fun recaptchaPolicy(properties: RecaptchaProperties): RecaptchaPolicy {
-        return ScoreThresholdPolicy(properties.minScore)
+        return ScoreThresholdPolicy(properties.scoreThreshold)
     }
 
     @Bean
