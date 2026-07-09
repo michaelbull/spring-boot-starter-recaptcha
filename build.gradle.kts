@@ -34,6 +34,7 @@ dependencies {
     implementation(libs.spring.web)
     implementation(libs.spring.boot.autoconfigure)
     implementation(libs.slf4j.api)
+    implementation(kotlin("reflect"))
 
     kapt(platform(libs.spring.boot.dependencies))
     kapt(libs.spring.boot.configuration.processor)
